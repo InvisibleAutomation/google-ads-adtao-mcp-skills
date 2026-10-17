@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "adtao": {
+      "type": "http",
+      "url": "https://mcp.adtao.io/mcp",
+      "headers": {
+        "X-AdTAO-Profile": "operator"
+      }
+    }
+  }
+}

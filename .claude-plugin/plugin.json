@@ -1,0 +1,9 @@
+{
+  "name": "adtao-operator",
+  "version": "0.2.0",
+  "description": "Google Ads skills on AdTAO: waste hunting against cross-account evidence, tracking checks, peer context and human-approved changes. Connects only to the AdTAO MCP server.",
+  "author": {"name": "AdTAO", "url": "https://adtao.io"},
+  "homepage": "https://adtao.io",
+  "license": "MIT",
+  "keywords": ["google-ads", "ppc", "mcp", "adtao"]
+}
