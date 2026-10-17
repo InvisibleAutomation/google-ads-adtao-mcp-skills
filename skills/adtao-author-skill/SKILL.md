@@ -27,6 +27,14 @@ description: Use when the user wants a new Google Ads skill written for AdTAO fr
 
 ## Rules
 
+- The answer opens with the one-line restatement from step 1, before anything else.
+- If step 2 finds an AdTAO skill or area that already does most of the job, say so in the answer's
+  first lines and write only the thin version that points to it; never a full parallel skill.
+- In what the user reads, name no tools and no codes: say "what AdTAO offers", "what happened after
+  the same change on other accounts", "cost per lead". Tool names belong only inside the SKILL.md.
+- The paragraph on why a plain Google Ads connection is not enough is tagged [TEST]: it is a claim
+  until a run of the new skill shows it.
+
 - Describe tools only by what their own descriptions and the house rules say. A claim that the new
   skill does better than a plain connection is [TEST] until a run shows it.
 - No account numbers, internal names or links in the file.
