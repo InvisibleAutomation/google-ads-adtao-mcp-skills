@@ -32,7 +32,10 @@ turning it on is a separate change the user approves.
    advertisers. One ad group per leaf theme that clears the playbook's floors (conversion rate at
    or above the vertical's median; 3 or more advertisers behind it), each term in exact and
    phrase. A keyword the account's own negatives block is dropped or its blocker is staged for
-   removal in the same batch.
+   removal in the same batch. Then `get_keyword_volume` on the kept terms for the build's
+   locations (Google Keyword Planner): drop a theme with no searches there, say
+   which themes are seasonal (peak and low month), and say how many clicks a day the daily
+   budget buys at the low and the high top-of-page bid. These are Google's estimates; say so.
 5. **Negatives.** Inherit first, then add, as the playbook's negatives rule says: `get_hierarchy_inventory`
    lists the lists the account can attach (from last night's group sweep; say so); the manager
    tree's universal and industry lists go in the build's `negative_lists` with their tier, so they
@@ -86,5 +89,5 @@ attachments, one approve call, and the two born-clean reads.
 `get_conversion_action_inventory`, `check_conversion_tags`, `get_account_geo_regime`,
 `get_keyword_gaps`, `get_fleet_term_evidence`, `get_hierarchy_inventory`,
 `get_evidence_led_negatives`, `get_competitor_landscape`, `get_competitor_element_patterns`,
-`refresh_competitor_data`, `stage_campaign_build`, `stage_manager_action`,
+`refresh_competitor_data`, `get_keyword_volume`, `stage_campaign_build`, `stage_manager_action`,
 `approve_and_execute`, `archetype_detect`, `get_ai_max_status`.
