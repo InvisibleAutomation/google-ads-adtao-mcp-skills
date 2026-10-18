@@ -19,6 +19,8 @@ turning it on is a separate change the user approves.
 
 1. **Context.** Read `account-context.yaml` if present: break-even cost per lead, goal, locations,
    brand rules. Without a break-even figure, ask for one: the playbook sets the budget from it.
+   `adtao_capabilities` gives the current campaign playbook: its version, its status and the rules
+   of each campaign type. The build cites that version and follows those rules.
 2. **Tracking first.** `get_conversion_action_inventory`, then `check_conversion_tags` on the landing
    page. The playbook needs a primary conversion action and the tag seen on the site: the check's
    site tracking reads the page and its Tag Manager containers, and counts a Google Analytics 4 tag
@@ -32,8 +34,8 @@ turning it on is a separate change the user approves.
    so, use the vertical benchmark instead, and name that as the fallback.
 4. **Keywords.** `get_keyword_gaps` for themes the account does not cover yet. Check the candidates
    with `get_fleet_term_evidence` (up to 25 per call) and keep the ones that convert across other
-   advertisers: conversion rate at or above the vertical's median and 3 or more advertisers
-   behind it. Group the kept terms by theme into 2 to 10 ad groups, each holding 4 to 20 keyword
+   advertisers: conversion rate at or above the vertical's median (the evidence read gives the
+   median and marks each term against it) and 3 or more advertisers behind it. Group the kept terms by theme into 2 to 10 ad groups, each holding 4 to 20 keyword
    entries (each term in exact and phrase is two entries, so at least 2 terms a group); a theme
    with one term joins its nearest theme rather than standing alone. A keyword the account's own negatives block is dropped or its blocker is staged for
    removal in the same batch. Then `get_keyword_volume` on the kept terms for the build's
@@ -48,9 +50,14 @@ turning it on is a separate change the user approves.
    competitors excluded by default on the full name as a phrase and never on a single token
    that is a place name or a word in the build's keywords; then the account's own terms from
    `get_evidence_led_negatives`. Every tier is attached or declined with a reason.
-6. **Ad angles.** `get_competitor_landscape` gives competitors' angles with an evidence level, and
-   `get_competitor_element_patterns` the wording patterns behind them. Write the ads from angles
-   marked common or persistent; copy the idea, never the words. When no collection exists, call
+6. **Ad angles and the business's own facts.** `get_competitor_landscape` gives competitors' angles
+   with an evidence level, and `get_competitor_element_patterns` the wording patterns behind them.
+   `get_site_facts` gives what the business itself says: its landing page (headings, phone, links
+   to its own pages) and its existing ads, sitelinks, callouts and call numbers. Write the ads from
+   angles marked common or persistent, copying the idea, never the words. Every claim (prices,
+   speed, sizes, guarantees) must appear in those facts or come from the user. Sitelinks point only
+   to links on the page or to existing sitelinks, and the call asset uses a number found there.
+   Anything else is listed for the user to confirm and kept out of the build. When no collection exists, call
    `refresh_competitor_data` once, say the angles land later, and write the ads from the
    theme's own terms with an override that says so.
 7. **Assemble the build** in the playbook's format: `playbook_version`, `campaign_type`,
@@ -78,7 +85,12 @@ turning it on is a separate change the user approves.
 ## Rules
 
 - The campaign is always created paused.
-- Run the steps in order: tracking, then keywords, then negatives, then angles.
+- Run the steps in order: tracking, then keywords, then negatives, then angles. Make one step's
+  calls at a time, never a later step's call alongside an earlier one.
+- Clicks a day from a budget and a bid is your own arithmetic: work it out (daily budget divided
+  by the bid) and label it as your estimate, not Google's.
+- No abbreviations in what the user reads: "conversion rate" not "CVR", "accounts" not "accts",
+  "Google Analytics" not "GA4".
 - What the user reads uses plain words: "target cost per lead", "conversion rate", never tool or skill
   names, never words joined with underscores. Your own arithmetic (a monthly figure from a daily
   budget) is labelled as your estimate.
@@ -89,14 +101,15 @@ turning it on is a separate change the user approves.
 
 ## Budget
 
-About 14 calls: inventory, tag check, geo regime, gaps, one or two term-evidence calls, keyword
-volume, list inventory, negatives, landscape and element patterns, one build stage call, one
-approve call, and the two born-clean reads.
+About 16 calls: capabilities, inventory, tag check, geo regime, gaps, one or two term-evidence
+calls, keyword volume, list inventory, negatives, landscape, element patterns, site facts, one
+build stage call, one approve call, and the two born-clean reads.
 
 ## Tools
 
 `get_conversion_action_inventory`, `check_conversion_tags`, `get_account_geo_regime`,
 `get_keyword_gaps`, `get_fleet_term_evidence`, `get_hierarchy_inventory`,
 `get_evidence_led_negatives`, `get_competitor_landscape`, `get_competitor_element_patterns`,
-`refresh_competitor_data`, `get_keyword_volume`, `stage_campaign_build`, `stage_manager_action`,
+`refresh_competitor_data`, `get_keyword_volume`, `get_site_facts`, `adtao_capabilities`,
+`stage_campaign_build`, `stage_manager_action`,
 `approve_and_execute`, `archetype_detect`, `get_ai_max_status`.
