@@ -33,8 +33,10 @@ turning it on is a separate change the user approves.
    or above the vertical's median; 3 or more advertisers behind it), each term in exact and
    phrase. A keyword the account's own negatives block is dropped or its blocker is staged for
    removal in the same batch.
-5. **Negatives.** Inherit first, then add, as the playbook's negatives rule says: the manager
-   tree's universal and industry lists attached in the same batch (`apply_negative_list`),
+5. **Negatives.** Inherit first, then add, as the playbook's negatives rule says: `get_hierarchy_inventory`
+   lists the lists the account can attach (from last night's group sweep; say so); the manager
+   tree's universal and industry lists go in the build's `negative_lists` with their tier, so they
+   are attached in the same request as the campaign,
    competitors excluded by default on the full name as a phrase and never on a single token
    that is a place name or a word in the build's keywords; then the account's own terms from
    `get_evidence_led_negatives`. Every tier is attached or declined with a reason.
@@ -51,12 +53,14 @@ turning it on is a separate change the user approves.
 8. **Show the user** the build as tables, citing the playbook version: ad groups with their keywords and the evidence for each,
    the ads, the negatives (inherited lists and new terms, each with its reason), the extensions,
    the budget and bidding with the area-type band it rests on, and every override.
-9. **Stage** it: one `stage_campaign_build` with the account and the build, then the list
-   attachments in the same batch. A build that departs from the playbook without a reason is
+9. **Stage** it: one `stage_campaign_build` with the account and the build; the lists in
+   `negative_lists` are attached with it, all or nothing. A build that departs from the playbook without a reason is
    refused with the rule it broke; fix it or add the override. Then house rules §6 for the code.
 10. **Born clean.** After it is created, run `archetype_detect` on the new campaign and read its
     AI Max state with `get_ai_max_status`: the playbook expects no findings and AI Max off
-    unless an override says otherwise. Report what the scan found. Then offer `enable_campaign`
+    unless an override says otherwise. Hold the new campaign to the build-time findings (structure,
+    settings, targeting); a paused campaign with no history trips the performance checks, which are
+    read after it has run. Report what the scan found. Then offer `enable_campaign`
     as a separate change, and an image for the ads with `add_image_asset` (field type AD_IMAGE)
     if the user has one.
 
