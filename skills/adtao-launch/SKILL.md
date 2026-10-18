@@ -57,14 +57,16 @@ turning it on is a separate change the user approves.
    angles marked common or persistent, copying the idea, never the words. Every claim (prices,
    speed, sizes, guarantees) must appear in those facts or come from the user. Sitelinks point only
    to links on the page or to existing sitelinks, and the call asset uses a number found there.
-   Anything else is listed for the user to confirm and kept out of the build. When no collection exists, call
+   Anything else is listed for the user to confirm and kept out of the build. Never put a phone
+   number in ad or extension text (Google refuses it); it goes in the call extension. When no collection exists, call
    `refresh_competitor_data` once, say the angles land later, and write the ads from the
    theme's own terms with an override that says so.
 7. **Assemble the build** in the playbook's format: `playbook_version`, `campaign_type`,
    `break_even_cpl`, `campaign` (name, daily_budget, bidding_strategy, locations), `ad_groups`
    (name, keywords, ads), `negatives`, `extensions` (sitelink, callout, structured_snippet),
    `tracking`. Where the build departs from the playbook on purpose, list it under `overrides`
-   with a reason.
+   with a reason, naming the rule exactly as the playbook does (for example
+   `budget.min_daily_vs_break_even_cpl`).
 8. **Show the user** the build, citing the playbook version, short enough to read in one go:
    one table row per ad group (its keywords, conversion rate elsewhere, advertisers, monthly
    searches); for the ads, each ad group's three strongest headlines and the count of the rest; one
