@@ -18,6 +18,12 @@ The whole campaign goes to Google as one change: budget, campaign, locations, ad
 ads, negatives, sitelinks, callouts and snippets all land, or none of it does. It is created paused;
 turning it on is a separate change the user approves.
 
+**The answer opens with two short sections, always:** "Open questions": each step 1 item the
+request did not answer (website and service pages, places served and not served, services and
+what they will not do, the monthly budget, break-even, the goal, the office and home IP addresses,
+whether the form keeps the click id), each with what you assumed for now; then "Tracking": the four
+lines from step 2. A request that says to go ahead without asking still gets both sections.
+
 ## Steps
 
 1. **Context, and what to ask a new account.** Read `account-context.yaml` if present. `adtao_capabilities`
@@ -39,7 +45,9 @@ turning it on is a separate change the user approves.
    and offer to set the tracking up first. Calls and form submissions are both leads. The same read's
    lead tracking says whether enhanced conversions for leads and auto-tagging are on; when either is
    off, say that booked jobs cannot be matched to clicks later, and stage `enable_auto_tagging` with
-   the build. Ask whether the website's form keeps the click id (gclid) with the lead.
+   the build. Ask whether the website's form keeps the click id (gclid) with the lead. Say this
+   step's findings in four short lines: the primary conversion actions, whether the tag is seen,
+   enhanced conversions for leads on or off, auto-tagging on or off.
 3. **Industry.** `get_account_industry` with the business's own words. Show the industry it has (or,
    for a new account, the closest candidates with how many accounts share each and how many keyword
    categories each loads) and ask which fits. When the person confirms one that is not already set,
@@ -68,8 +76,9 @@ turning it on is a separate change the user approves.
    plain term's figures as its own. The playbook allows at most 2 such terms in an ad group, so add
    only the cities where Keyword Planner shows searches. Group the kept terms by theme into
    2 to 10 ad groups, each holding 4 to 20 keyword entries (each term in exact and phrase is two
-   entries, so at least 2 terms a group); a theme with one term joins its nearest theme. A keyword
-   the account's own negatives block is dropped or its blocker is staged for removal in the same
+   entries, so at least 2 terms a group); a theme with one term joins its nearest theme.
+   `account_conversions_30d` is the inventory's figure for the last 30 days; the text quotes the
+   same number. A keyword the account's own negatives block is dropped or its blocker is staged for removal in the same
    batch. Then `get_keyword_volume` on the kept terms for the build's location ids (Google Keyword
    Planner): drop a theme or city with no searches there, say which themes are seasonal, and say
    how many clicks a day the daily budget buys at the low and the high top-of-page bid. These are
@@ -82,7 +91,8 @@ turning it on is a separate change the user approves.
    account under no swept manager has none: decline the tier with that reason. Competitors are
    excluded on the full name as a phrase, never on a single word that is a place name or a word in
    the build's keywords. Then the account's own terms from `get_evidence_led_negatives` (none on a
-   new account), and the services the business said it does not do. Every tier is attached or
+   new account), and the services the business said it does not do. Never add a negative that
+   blocks a term step 5 kept, or a service the ads or extensions offer. Every tier is attached or
    declined with a reason.
 7. **Ad angles and the business's own facts.** `get_competitor_landscape` gives competitors' angles
    with an evidence level, and `get_competitor_element_patterns` the wording behind them. When no
@@ -94,7 +104,9 @@ turning it on is a separate change the user approves.
    sizes, guarantees) must appear in those facts or come from the user; sitelinks point only to
    links on the page or existing sitelinks; the call extension uses a number found there. Anything
    else is listed for the user to confirm and kept out of the build. Never put a phone number in ad
-   or extension text (Google refuses it). The same read says whether the Business Profile is linked.
+   or extension text (Google refuses it). Before showing the ads, check each headline and
+   description against those facts and drop any claim that is not there ("guaranteed", "best",
+   "top", "included"). Do not read the site facts before this step. The same read says whether the Business Profile is linked.
    When it is not, stop (see the stop rule at the top): give the person its linking steps, word for
    word, and assemble nothing until the link shows; the build does not stand in for it. Its stored profile is an earlier read that
    can be old: use a claim from it only after the person confirms it, and never its phone number.
@@ -134,7 +146,8 @@ turning it on is a separate change the user approves.
    named in an ad is one of the places served. Where the build departs from the
    playbook on purpose, list it under `overrides` with a reason, naming the rule exactly as the
    playbook does (for example `budget.min_daily_vs_break_even_cpl`).
-11. **Show the user** the build, citing the playbook version, short enough to read in one go: one
+11. **Show the user** the build, citing the playbook version, in about 900 words before the build
+    block, so the whole answer fits: one
     table row per ad group (keywords, conversion rate elsewhere, advertisers, monthly searches, its
     page); for the ads, each ad group's three strongest headlines and the count of the rest; one line
     per negative list and the new terms in a single list; the extensions as one list each; the places
@@ -165,7 +178,9 @@ turning it on is a separate change the user approves.
 - No abbreviations in what the user reads: "conversion rate" not "CVR", "accounts" not "accts",
   "Google Analytics" not "GA4".
 - What the user reads uses plain words: "target cost per lead", "conversion rate", never tool or skill
-  names, never words joined with underscores. Your own arithmetic (a monthly figure from a daily
+  names, never words joined with underscores, field names, scores such as "confidence 0.56", or
+  AdTAO's own terms ("tier", "manager tree", "evidence-led", "brand-defence"): say "the lists your
+  manager account shares", "AdTAO's check against other advertisers", "the brand campaign". Your own arithmetic (a monthly figure from a daily
   budget) is labelled as your estimate.
 - Every keyword in the build has its evidence shown, or is marked "this account only".
 - A figure resting on fewer than 30 accounts or advertisers says "a small group" next to the count.
@@ -174,9 +189,15 @@ turning it on is a separate change the user approves.
 
 ## Budget
 
-About 20 calls: capabilities, inventory, tag check, industry (and its confirmation), locations, geo
-regime, gaps, one or two term-evidence calls, keyword volume, list inventory, negatives, landscape,
-element patterns, site facts, one build stage call, one approve call, and the two born-clean reads.
+About 20 calls, one at a time and in this order (a later call never runs beside an earlier one):
+1 `adtao_capabilities`; 2 `get_conversion_action_inventory`, `check_conversion_tags`;
+3 `get_account_industry` (and `set_account_industry` on a yes); 4 `find_locations`,
+`get_account_geo_regime`; 5 `get_keyword_gaps`, `get_fleet_term_evidence` (one or two),
+`get_keyword_volume`; 6 `get_hierarchy_inventory`, `get_evidence_led_negatives`;
+7 `get_competitor_landscape`, `get_competitor_element_patterns`, `get_site_facts`;
+8 `check_landing_page`; 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
+`get_ai_max_status`. When the request already answers a step 1 question, use the answer and say
+so; list the ones still open in one message.
 
 ## Tools
 
