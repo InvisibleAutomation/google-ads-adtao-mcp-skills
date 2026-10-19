@@ -11,6 +11,9 @@ build, even when the user asks for the build.
 Say what is missing, why a campaign that cannot count its leads cannot be judged, and offer to check
 the tracking first. That is the whole answer.
 
+The same holds when the Business Profile is not linked (step 7): give the linking steps word for
+word, say what has been read so far, and stop. Do not assemble or show a build until the link shows.
+
 The whole campaign goes to Google as one change: budget, campaign, locations, ad groups, keywords,
 ads, negatives, sitelinks, callouts and snippets all land, or none of it does. It is created paused;
 turning it on is a separate change the user approves.
@@ -60,7 +63,10 @@ turning it on is a separate change the user approves.
    per call) and keep the ones that convert across other advertisers: conversion rate at or above
    the vertical's median (the evidence read gives the median and marks each term against it) and 3
    or more advertisers behind it. Add "near me" and "emergency" as themes of their own for home
-   services, and each city served written into the theme's terms. Group the kept terms by theme into
+   services when their terms pass the same test. A city written into a kept term ("air duct
+   cleaning spring tx") has no evidence of its own: mark it "this account only" and never show the
+   plain term's figures as its own. The playbook allows at most 2 such terms in an ad group, so add
+   only the cities where Keyword Planner shows searches. Group the kept terms by theme into
    2 to 10 ad groups, each holding 4 to 20 keyword entries (each term in exact and phrase is two
    entries, so at least 2 terms a group); a theme with one term joins its nearest theme. A keyword
    the account's own negatives block is dropped or its blocker is staged for removal in the same
@@ -70,7 +76,9 @@ turning it on is a separate change the user approves.
    Google's estimates; say so. Finish this step before calling anything in step 6.
 6. **Negatives.** Inherit first, then add: `get_hierarchy_inventory` lists the lists the account can
    attach (from last night's group sweep; say so); the manager's universal and industry lists go in
-   the build's `negative_lists` with their tier, attached in the same request as the campaign. A new
+   the build's `negative_lists` with their tier, attached in the same request as the campaign. At
+   most 20 lists attach to one campaign: keep the account's own and the industry lists first, then
+   the universal ones, and decline the rest in `negative_tiers_declined` with that reason. A new
    account under no swept manager has none: decline the tier with that reason. Competitors are
    excluded on the full name as a phrase, never on a single word that is a place name or a word in
    the build's keywords. Then the account's own terms from `get_evidence_led_negatives` (none on a
@@ -87,8 +95,8 @@ turning it on is a separate change the user approves.
    links on the page or existing sitelinks; the call extension uses a number found there. Anything
    else is listed for the user to confirm and kept out of the build. Never put a phone number in ad
    or extension text (Google refuses it). The same read says whether the Business Profile is linked.
-   When it is not, stop and give the person its linking steps, word for word; location assets wait
-   for that link, and the build does not stand in for it. Its stored profile is an earlier read that
+   When it is not, stop (see the stop rule at the top): give the person its linking steps, word for
+   word, and assemble nothing until the link shows; the build does not stand in for it. Its stored profile is an earlier read that
    can be old: use a claim from it only after the person confirms it, and never its phone number.
 8. **Is each page ready?** `check_landing_page` on each ad group's page, with its service. A stop
    (the page errors, or asks for nothing: no form, no button, no call to action) means that ad group
@@ -102,8 +110,11 @@ turning it on is a separate change the user approves.
    lines are blocks of ad groups in one campaign. A brand campaign (`campaign_type` brand_defence)
    is built in the same launch, ahead of the service campaign, so the business's own name is covered
    against directories and lead sellers; its budget is part of the same figure. The service
-   campaign's `other_campaigns_daily_spend` counts it. Show one figure before anything is staged: the monthly
-   budget the owner named, this campaign's daily budget times 30.4, and what that leaves. If the
+   campaign's `other_campaigns_daily_spend` is the brand campaign's daily budget plus what the
+   account's running campaigns spend a day. When the named budget cannot carry both floors (the
+   brand campaign's is half of break-even a day), show both figures and ask which to build first;
+   never reserve an amount for a brand campaign that is not in a build. Show one figure before
+   anything is staged: the monthly budget the owner named, this campaign's daily budget times 30.4, and what that leaves. If the
    campaign does not fit inside the named budget, do not stage: say what to cut (fewer themes or
    places, or one campaign instead of two). When the named budget buys few leads at the market's
    bids, say so and keep the budget they named. Say the rate in the same sentence: "sized for the
@@ -111,13 +122,16 @@ turning it on is a separate change the user approves.
    after a hold, size the first month from clicks at the Keyword Planner bid.
 10. **Assemble the build** in the playbook's format: `playbook_version`, `campaign_type`,
    `break_even_cpl`, `campaign` (name, daily_budget, bidding_strategy, locations, location_names,
-   `conversion_goals`), `ad_groups` (name, keywords, ads with each group's own final URL),
-   `negatives`, `negative_lists`, `extensions` (sitelink, callout, structured_snippet, call),
+   `conversion_goals`), `ad_groups` (name, keywords, two ads each with the group's own final URL;
+   the playbook needs at least two), `negatives`, `negative_lists`, `extensions` (sitelink, callout, structured_snippet, call),
    `tracking`. `conversion_goals` bids on the leads (calls and form submissions) and not on soft
-   events (directions, page views, form starts, chat opens). In the service campaign,
+   events (directions, page views, form starts, chat opens), nor on purchases for a business that
+   does not sell online. In the service campaign,
    `campaign.brand_terms` carries the business's own name, so the brand campaign takes those searches,
    and `campaign.ip_exclusions` the public IP addresses of the office and the owner's home (ask for
-   them), so the first conversions come from customers. Where the build departs from the
+   them), so the first conversions come from customers. Leave `campaign.brand_list_shared_set_id`
+   out unless the person names a Google brand list; a negative keyword list is not one. A place
+   named in an ad is one of the places served. Where the build departs from the
    playbook on purpose, list it under `overrides` with a reason, naming the rule exactly as the
    playbook does (for example `budget.min_daily_vs_break_even_cpl`).
 11. **Show the user** the build, citing the playbook version, short enough to read in one go: one
