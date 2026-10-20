@@ -120,17 +120,22 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    each campaign: two campaigns share it. One campaign per service line (for example residential
    and commercial) only when the budget carries 3 times the target for each line; otherwise the
    lines are blocks of ad groups in one campaign. A brand campaign (`campaign_type` brand_defence)
-   is proposed every time, built in the same launch ahead of the service campaign, so the
+   is proposed every time the account does not already run one, built in the same launch ahead of the service campaign, so the
    business's own name is covered against directories and lead sellers; ask the person to confirm
    it before building, since some advertisers do not want one. If they decline, build no brand
    campaign and leave `campaign.brand_terms` out of the service campaign, so their name still finds
    their ads. Its budget comes from its own searches: `get_keyword_volume` on the business's name,
    monthly searches / 30.4 times the top-of-page bid (the high figure), and never under $10 a day;
-   put the figures in the brand build as `brand_searches` {monthly_searches, top_of_page_bid}. Its
+   put the figures in the brand build as `brand_searches` {monthly_searches, top_of_page_bid} (a brand
+   build without them is refused). When the account already runs a brand campaign, do not build a
+   second: name it and say what it spends, and when that is under $10 a day, say so. Its
    budget is part of the same figure. The service campaign's `other_campaigns_daily_spend` is the
    brand campaign's daily budget plus what the account's running campaigns spend a day. When the
    named budget cannot carry both floors, show both figures and ask which to build first; never
-   reserve an amount for a brand campaign that is not in a build. Show one figure before
+   reserve an amount for a brand campaign that is not in a build. Ask whether the budget the owner
+   named includes the campaigns the account already runs: `stage_campaign_build` counts what they
+   spent a day over the last week whatever the build says, and when it refuses on the budget, show
+   the owner the campaigns it names and ask before cutting anything. Show one figure before
    anything is staged: the monthly budget the owner named, this campaign's daily budget times 30.4, and what that leaves. If the
    campaign does not fit inside the named budget, do not stage: say what to cut (fewer themes or
    places, or one campaign instead of two). When the named budget buys few leads at the market's
