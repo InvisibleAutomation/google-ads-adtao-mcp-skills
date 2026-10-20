@@ -6,7 +6,7 @@ in AdTAO.
 
 ## Install
 
-**Claude Code:** `/plugin install` from this repository (github.com/InvisibleAutomation/google-ads-adtao-mcp-skills), or copy `skills/` into `.claude/skills/`
+**Claude Code:** `/plugin install` from this repository (github.com/adtaoai/google-ads-adtao-mcp-skills), or copy `skills/` into `.claude/skills/`
 and `.mcp.json` into your project. The plugin connects to one server only:
 `https://mcp.adtao.io/mcp`. Sign in to AdTAO when your AI app asks.
 

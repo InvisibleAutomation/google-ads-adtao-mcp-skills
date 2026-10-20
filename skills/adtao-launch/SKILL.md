@@ -120,12 +120,17 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    each campaign: two campaigns share it. One campaign per service line (for example residential
    and commercial) only when the budget carries 3 times the target for each line; otherwise the
    lines are blocks of ad groups in one campaign. A brand campaign (`campaign_type` brand_defence)
-   is built in the same launch, ahead of the service campaign, so the business's own name is covered
-   against directories and lead sellers; its budget is part of the same figure. The service
-   campaign's `other_campaigns_daily_spend` is the brand campaign's daily budget plus what the
-   account's running campaigns spend a day. When the named budget cannot carry both floors (the
-   brand campaign's is half of break-even a day), show both figures and ask which to build first;
-   never reserve an amount for a brand campaign that is not in a build. Show one figure before
+   is proposed every time, built in the same launch ahead of the service campaign, so the
+   business's own name is covered against directories and lead sellers; ask the person to confirm
+   it before building, since some advertisers do not want one. If they decline, build no brand
+   campaign and leave `campaign.brand_terms` out of the service campaign, so their name still finds
+   their ads. Its budget comes from its own searches: `get_keyword_volume` on the business's name,
+   monthly searches / 30.4 times the top-of-page bid (the high figure), and never under $10 a day;
+   put the figures in the brand build as `brand_searches` {monthly_searches, top_of_page_bid}. Its
+   budget is part of the same figure. The service campaign's `other_campaigns_daily_spend` is the
+   brand campaign's daily budget plus what the account's running campaigns spend a day. When the
+   named budget cannot carry both floors, show both figures and ask which to build first; never
+   reserve an amount for a brand campaign that is not in a build. Show one figure before
    anything is staged: the monthly budget the owner named, this campaign's daily budget times 30.4, and what that leaves. If the
    campaign does not fit inside the named budget, do not stage: say what to cut (fewer themes or
    places, or one campaign instead of two). When the named budget buys few leads at the market's
@@ -139,7 +144,7 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    `tracking`. `conversion_goals` bids on the leads (calls and form submissions) and not on soft
    events (directions, page views, form starts, chat opens), nor on purchases for a business that
    does not sell online. In the service campaign,
-   `campaign.brand_terms` carries the business's own name, so the brand campaign takes those searches,
+   `campaign.brand_terms` carries the business's own name when a brand campaign is built, so it takes those searches,
    and `campaign.ip_exclusions` the public IP addresses of the office and the owner's home (ask for
    them), so the first conversions come from customers. Leave `campaign.brand_list_shared_set_id`
    out unless the person names a Google brand list; a negative keyword list is not one. A place
@@ -195,7 +200,7 @@ About 20 calls, one at a time and in this order (a later call never runs beside 
 `get_account_geo_regime`; 5 `get_keyword_gaps`, `get_fleet_term_evidence` (one or two),
 `get_keyword_volume`; 6 `get_hierarchy_inventory`, `get_evidence_led_negatives`;
 7 `get_competitor_landscape`, `get_competitor_element_patterns`, `get_site_facts`;
-8 `check_landing_page`; 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
+8 `check_landing_page`; 9 `get_keyword_volume` on the business's name (the brand campaign); 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
 `get_ai_max_status`. When the request already answers a step 1 question, use the answer and say
 so; list the ones still open in one message.
 
