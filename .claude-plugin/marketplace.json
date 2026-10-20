@@ -1,0 +1,17 @@
+{
+  "name": "adtao",
+  "owner": {
+    "name": "AdTAO",
+    "url": "https://adtao.io"
+  },
+  "plugins": [
+    {
+      "name": "adtao-operator",
+      "source": ".",
+      "description": "Google Ads skills on AdTAO: waste hunting against cross-account evidence, tracking checks, peer context and human-approved changes."
+    }
+  ],
+  "metadata": {
+    "description": "AdTAO's Google Ads operator skills for Claude, connected to the AdTAO MCP server."
+  }
+}

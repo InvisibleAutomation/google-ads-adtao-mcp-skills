@@ -6,8 +6,9 @@ in AdTAO.
 
 ## Install
 
-**Claude Code:** `/plugin install` from this repository (github.com/adtaoai/google-ads-adtao-mcp-skills), or copy `skills/` into `.claude/skills/`
-and `.mcp.json` into your project. The plugin connects to one server only:
+**Claude Code:** `/plugin marketplace add adtaoai/google-ads-adtao-mcp-skills`, then
+`/plugin install adtao-operator@adtao`. Or copy `skills/` into `.claude/skills/` and `.mcp.json` into
+your project. The plugin connects to one server only:
 `https://mcp.adtao.io/mcp`. Sign in to AdTAO when your AI app asks.
 
 **Claude Desktop and others:** add the AdTAO connector, then paste a skill's `SKILL.md` into the
