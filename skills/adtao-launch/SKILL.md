@@ -115,7 +115,10 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    is not built until the page is fixed; say what to fix. A hold (no trust signals, slow on a phone,
    a heading that does not name the service) is said in one line and is the person's to accept as an
    override. When speed was not measured, say so. Carry the check's budget sentence into step 9.
-9. **The budget the owner signs.** The playbook's floor is 3 times the target cost per lead a day
+9. **The budget the owner signs.** First `metrics_budget_pacing`: the budgets already set for the
+   account in AdTAO and its running campaigns, with what each spends a day and which is a brand
+   campaign. Tell the owner what the account already spends a day and ask whether the budget they
+   named includes it; the answer decides what is left for the new campaign. The playbook's floor is 3 times the target cost per lead a day
    (the checker holds at least 2.1 times break-even), and it is a floor for the account, not for
    each campaign: two campaigns share it. One campaign per service line (for example residential
    and commercial) only when the budget carries 3 times the target for each line; otherwise the
@@ -132,10 +135,10 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    budget is part of the same figure. The service campaign's `other_campaigns_daily_spend` is the
    brand campaign's daily budget plus what the account's running campaigns spend a day. When the
    named budget cannot carry both floors, show both figures and ask which to build first; never
-   reserve an amount for a brand campaign that is not in a build. Ask whether the budget the owner
-   named includes the campaigns the account already runs: `stage_campaign_build` counts what they
-   spent a day over the last week whatever the build says, and when it refuses on the budget, show
-   the owner the campaigns it names and ask before cutting anything. Show one figure before
+   reserve an amount for a brand campaign that is not in a build. `stage_campaign_build` counts
+   what the running campaigns spent a day over the last week whatever the build says; when it
+   refuses on the budget, show the owner the campaigns it names and ask before cutting anything.
+   Show one figure before
    anything is staged: the monthly budget the owner named, this campaign's daily budget times 30.4, and what that leaves. If the
    campaign does not fit inside the named budget, do not stage: say what to cut (fewer themes or
    places, or one campaign instead of two). When the named budget buys few leads at the market's
@@ -205,7 +208,7 @@ About 20 calls, one at a time and in this order (a later call never runs beside 
 `get_account_geo_regime`; 5 `get_keyword_gaps`, `get_fleet_term_evidence` (one or two),
 `get_keyword_volume`; 6 `get_hierarchy_inventory`, `get_evidence_led_negatives`;
 7 `get_competitor_landscape`, `get_competitor_element_patterns`, `get_site_facts`;
-8 `check_landing_page`; 9 `get_keyword_volume` on the business's name (the brand campaign); 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
+8 `check_landing_page`; 9 `metrics_budget_pacing`, `get_keyword_volume` on the business's name (the brand campaign); 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
 `get_ai_max_status`. When the request already answers a step 1 question, use the answer and say
 so; list the ones still open in one message.
 
@@ -215,6 +218,6 @@ so; list the ones still open in one message.
 `get_keyword_gaps`, `get_fleet_term_evidence`, `get_hierarchy_inventory`,
 `get_evidence_led_negatives`, `get_competitor_landscape`, `get_competitor_element_patterns`,
 `refresh_competitor_data`, `get_keyword_volume`, `find_locations`, `get_account_industry`,
-`set_account_industry`, `check_landing_page`, `get_site_facts`, `adtao_capabilities`,
+`set_account_industry`, `check_landing_page`, `get_site_facts`, `adtao_capabilities`, `metrics_budget_pacing`,
 `stage_campaign_build`, `stage_manager_action`,
 `approve_and_execute`, `archetype_detect`, `get_ai_max_status`.
