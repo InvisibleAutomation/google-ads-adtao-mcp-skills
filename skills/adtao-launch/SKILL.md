@@ -177,7 +177,8 @@ lines from step 2. A request that says to go ahead without asking still gets bot
     table row per ad group (keywords, conversion rate elsewhere, advertisers, monthly searches, its
     page); for the ads, each ad group's three strongest headlines and the count of the rest; one line
     per negative list and the new terms in a single list; the extensions as one list each; the places
-    by name; the budget figure from step 9; and every override. The full build goes to the staging
+    by name; the budget figure from step 9 (always shown); whether the Business Profile is linked; and every
+    override as a plain sentence saying what departs and why, never the rule's key (`budget.min_daily_...`). The full build goes to the staging
     call, not into the text, unless the user asks to see it.
 12. **Stage** it: one `stage_campaign_build` with the account and the build, and with it, for a new
     account, `pause_auto_applied_recommendations` and `enable_auto_tagging` through
@@ -215,7 +216,8 @@ lines from step 2. A request that says to go ahead without asking still gets bot
   manager account shares", "AdTAO's check against other advertisers", "the brand campaign". Your own arithmetic (a monthly figure from a daily
   budget) is labelled as your estimate.
 - Every keyword in the build has its evidence shown, or is marked "this account only".
-- A figure resting on fewer than 30 accounts or advertisers says "a small group" next to the count.
+- A figure resting on fewer than 30 accounts or advertisers says "a small group" next to the count, every
+  time it appears: in tables, in the keyword list and in the area cost-per-lead band.
 - A build cites the current playbook version. If staging says the playbook is not active yet, say
   that builds open once it is, and offer to keep the build ready.
 
