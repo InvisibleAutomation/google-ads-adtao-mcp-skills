@@ -197,6 +197,12 @@ lines from step 2. A request that says to go ahead without asking still gets bot
 ## Rules
 
 - The campaign is always created paused.
+- Never show or stage a build that has not passed `stage_campaign_build` with `check_only: true` in
+  this conversation. If the check was not run, run it before writing the answer.
+- Never make up a phone number, a page address, a price or a claim. A call extension uses a number
+  `get_site_facts` found; a sitelink points to a link found on the page; a claim ("licensed and
+  insured", "free estimates", "locally owned") appears in the site facts or comes from the person.
+  When something is missing, leave it out of the build and list it under what is not known.
 - Run the steps in order: tracking, industry, places, keywords, negatives, angles, budget. Make one step's
   calls at a time, never a later step's call alongside an earlier one.
 - Clicks a day from a budget and a bid is your own arithmetic: work it out (daily budget divided
