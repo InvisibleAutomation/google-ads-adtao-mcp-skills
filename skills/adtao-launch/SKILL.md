@@ -66,11 +66,17 @@ lines from step 2. A request that says to go ahead without asking still gets bot
      the band and the bids, and size from the band; keep their number as the aim, labelled as not
      yet seen on accounts like theirs;
    - no goal: use 70% of break-even, and say it is a stand-in, not their target.
+   A target the owner gave goes in the build's `target_cpl`: the daily budget must be at least 3
+   times it. With no target, leave `target_cpl` out (never put the 70% stand-in there): the budget
+   must then be at least 2.1 times break-even. A daily figure from the owner goes in
+   `campaign.owner_monthly_budget` as daily x 30.4, said as such.
 5. **Keywords.** `get_keyword_gaps` for themes the account does not cover yet; on a new account every
    theme of its industry is uncovered. Check the candidates with `get_fleet_term_evidence` (up to 25
    per call) and keep the ones that convert across other advertisers: conversion rate at or above
    the vertical's median (the evidence read gives the median and marks each term against it) and 3
-   or more advertisers behind it. Add "near me" and "emergency" as themes of their own for home
+   or more advertisers behind it. Put each kept term's `cvr`, `advertisers` and
+   `at_or_above_vertical_median` in its `evidence`, and the median in the build's `vertical_median_cvr`:
+   the playbook's checker refuses a term under either floor. Add "near me" and "emergency" as themes of their own for home
    services when their terms pass the same test. A city written into a kept term ("air duct
    cleaning spring tx") has no evidence of its own: mark it "this account only" and never show the
    plain term's figures as its own. The playbook allows at most 2 such terms in an ad group, so add
@@ -90,7 +96,9 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    the universal ones, and decline the rest in `negative_tiers_declined` with that reason. A new
    account under no swept manager has none: decline the tier with that reason. Competitors are
    excluded on the full name as a phrase, never on a single word that is a place name or a word in
-   the build's keywords. Then the account's own terms from `get_evidence_led_negatives` (none on a
+   the build's keywords. A competitor whose name has nothing distinctive in it (only places,
+   keyword words and words like "city" or "services") is the owner's call: list it, and exclude it
+   only if the owner says so for that competitor (`owner_confirmed: true` on the negative). Then the account's own terms from `get_evidence_led_negatives` (none on a
    new account), and the services the business said it does not do. Never add a negative that
    blocks a term step 5 kept, or a service the ads or extensions offer. Every tier is attached or
    declined with a reason.
@@ -102,7 +110,8 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    gives what the business itself says: headings, phone, links to its own pages, and its existing
    ads and assets. Each ad group's final URL is the page for its service. Every claim (prices, speed,
    sizes, guarantees) must appear in those facts or come from the user; sitelinks point only to
-   links on the page or existing sitelinks; the call extension uses a number found there. Anything
+   links on the page or existing sitelinks; the call extension uses a number found there, and that
+   number goes in the build's `site_phone` (a build with a number and no call extension is refused). Anything
    else is listed for the user to confirm and kept out of the build. Never put a phone number in ad
    or extension text (Google refuses it). Before showing the ads, check each headline and
    description against those facts and drop any claim that is not there ("guaranteed", "best",
@@ -158,9 +167,13 @@ lines from step 2. A request that says to go ahead without asking still gets bot
    out unless the person names a Google brand list; a negative keyword list is not one. A place
    named in an ad is one of the places served. Where the build departs from the
    playbook on purpose, list it under `overrides` with a reason, naming the rule exactly as the
-   playbook does (for example `budget.min_daily_vs_break_even_cpl`).
+   playbook does (for example `budget.min_daily_vs_break_even_cpl`). Then check it: call
+   `stage_campaign_build` with `check_only: true`. It stages nothing and returns every departure;
+   change the build for each one, or add its override with a reason, and check again until it
+   passes. Never show a build the check has not passed.
 11. **Show the user** the build, citing the playbook version, in about 900 words before the build
-    block, so the whole answer fits: one
+    block, so the whole answer fits (a long answer is cut off and the build is lost; keep tables
+    short and the build block compact, one line per keyword): one
     table row per ad group (keywords, conversion rate elsewhere, advertisers, monthly searches, its
     page); for the ads, each ad group's three strongest headlines and the count of the rest; one line
     per negative list and the new terms in a single list; the extensions as one list each; the places
