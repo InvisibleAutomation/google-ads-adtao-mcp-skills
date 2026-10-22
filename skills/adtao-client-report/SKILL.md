@@ -16,11 +16,12 @@ are "after", not "because", and nothing is sent.
    `goal` (with `in_users_words`), `budget.monthly`, `people` (whose email addresses are the agency's and
    whose the client's), and `reporting`: `result_label` (leads, sales, calls, bookings), `strategy`,
    `planned_updates`, `audience`. In the draft they are "your account notes", never the file name. If
-   none were given, say once that no account notes were provided, and ask the user for this quarter's
-   strategy and next month's plans, or leave the marked places.
+   none were given, the first line of your answer (before the draft) says: "No account notes were
+   provided; tell me this quarter's plan and next month's, or edit the marked places." In the draft
+   itself, never mention notes that do not exist ("no goal was given in your account notes").
 2. **Month.** The month the user names, else the last complete month. Use the account's own currency
    (`customer.currency_code` from read 3) for every money figure, with its symbol.
-3. **Read** (7 calls, 2 more only when needed; on the free plan wait any `retry_after` you are given):
+3. **Read** (9 calls, 2 more only when needed; on the free plan wait any `retry_after` you are given):
    1. `get_account_intelligence`: the goals saved in AdTAO (`platform_state.goals`: metric, target, and
       whether it is for the account or one campaign) and the budgets saved in AdTAO.
    2. `get_monthly_performance_comparison` with `account_ids` [the account] and `months_back` 13: the
@@ -35,9 +36,11 @@ are "after", not "because", and nothing is sent.
    5. `metrics_budget_pacing` with `date_range` CUSTOM and the month's `start_date` and `end_date`, only
       when step 1 shows a budget saved in AdTAO.
    6. `get_performance_vs_benchmark` (window `LAST_30_DAYS`).
-   7. `get_changelog` with the month's `start_date` and `end_date`, `skip_manager_list_copies` true and
-      `limit` 100 (one more page with `offset` 100 when `total_count` is larger): the month's changes, and
-      `budget_changes_not_in_change_history` for budget changes no change history records.
+   7. `get_changelog` three times, each with the month's `start_date` and `end_date` and
+      `skip_manager_list_copies` true: (a) `entity_type` CAMPAIGN_BUDGET, `limit` 50: the budget changes,
+      with `budget_changes_not_in_change_history`; (b) `entity_type` CAMPAIGN, `limit` 50: bidding, status
+      and other campaign settings; (c) no `entity_type`, `limit` 1: only its `total_count`. Busy accounts
+      record tens of thousands of targeting and keyword changes a month, so they are counted, not listed.
    8. `archetype_diagnosis`: the open issues.
    9. `get_experiment_readout` only when read 7 or the notes mention an experiment in the month.
    Add `get_market_comparison` only if the user asks how the account's issues compare with similar
@@ -61,7 +64,9 @@ are "after", not "because", and nothing is sent.
    the template does not ask for: no extra paragraphs, notes, marked places or "before you send" lists.
    After it come only the house rules' three closing lines (Next step, Based on, Not known). They agree
    with the draft: no issue, figure or source the draft does not show, no check that was not run, no
-   reason of your own. Sources in plain words ("your account's monthly figures", "AdTAO's latest check
+   reason of your own. Next step is exactly: "Edit the marked places, then send it yourself." Not known
+   lists only figures a read returned as unavailable and what the notes lacked, in one short line
+   each: never how a tool returned its results, never general Google Ads knowledge. Sources in plain words ("your account's monthly figures", "AdTAO's latest check
    of the account"). `{…}` is filled from the reads; `[…]` lines stay
    for the user exactly as written. Results ("leads") stand for `result_label`.
 
@@ -72,7 +77,7 @@ are "after", not "because", and nothing is sent.
    ## Summary
    - {On goal | Off goal | No goal is saved}: {headline figure} against a target of {target}.
    - Budget: {spend} of {budget} ({share}%), {under budget | on budget | over budget}.
-   - Biggest move: {figure} {better | worse} by {n}% on {last month}.
+   - Biggest move: {the headline or supporting figure with the largest change} {better | worse} by {n}% on {last month}.
    > [Your note: why this moved]
 
    ## Against your goal
@@ -113,7 +118,8 @@ are "after", not "because", and nothing is sent.
    ```
 
    How to fill it:
-   - **Goal.** On or off target uses the goal's figure; a campaign goal uses that campaign's row.
+   - **Goal.** On or off target uses the goal's figure; a campaign goal uses that campaign's row. With
+     no goal, the section is only the line that no goal is saved.
    - **Budget.** The first of: the notes' `budget.monthly`; a budget saved in AdTAO covering the month
      (read 5); else the campaigns' daily budgets from read 3 × days in the month. Under 100% is under
      budget, 100–105% on budget, over 105% over budget. For a month not yet over, add "my estimate from
@@ -131,16 +137,23 @@ are "after", not "because", and nothing is sent.
      PERFORMANCE_MAX "Performance Max" and ALL "all") and nothing else: no `verdict` or `headline`
      wording, no explanation of the account counts, no note of your own. Leave a metric out
      under 10 accounts; under 30 add "(a small group)".
-   - **Changes.** Each line is date, action, what it was on, and old and new values where the change list
-     has them, oldest first. No reason, no purpose, no link to a result, nothing about where a change was
-     made or recorded. Leave out IP exclusion changes. If some of the month could not be read, one line:
-     "Changes before {date} are not shown."
-   - **Issues.** At most five, by priority, and only those the latest check still saw (leave out any it
-     marks as not seen in the latest check). Each is the issue's description and suggested action in
-     plain words, nothing added: no dates, no effects. A tracking red flag is only an issue about measuring conversions.
+   - **Changes.** From read 7 (a) and (b) only. Each line is date, action, the campaign it was on, and old
+     and new values where the change list has them, oldest first; a change without values is its action
+     alone. Never remark on the change list itself (no "not shown", "values not recorded", "type not
+     given"). No reason, no purpose, no link to a result. At most 12 lines: the rest of (a) and (b) become
+     "and {n} more budget and campaign changes", n being their `total_count`s less the lines shown. Then
+     budget changes no change history records, one line each (at most 6, then "and {n} more"). Last line:
+     "And {N} changes to keywords, targeting, ads and assets." where N is (c)'s `total_count` less (a)'s
+     and (b)'s; leave the line out when N is 0. Nothing else in this section.
+   - **Issues.** Only issues `archetype_diagnosis` lists in full (with a description); the ones it gives
+     only as counts are left out and not mentioned. At most five, by priority, and only those the latest
+     check still saw (leave out any it marks as not seen in the latest check). Each is the issue's description and, when the tool gives
+     one, its suggested action, in plain words, nothing added: no dates, no effects, no counts of checks.
+     With none, the line is "No open issues in AdTAO's latest check of the account." A tracking red flag is only an issue about measuring conversions.
    - **Counts** everywhere, red flags and experiments included, follow the rounding rule below ("about
      30 leads"). Return on ad spend is in money form in every column ("£33.36 for every £1").
-   - **Red flags:** off goal; results down more than 15% on last month; cost per result worse by more
+   - **Red flags** come only from the sections above (a tracking red flag repeats an issue listed above,
+     with its count when the issue gives one): off goal; results down more than 15% on last month; cost per result worse by more
      than 15%; spend over 105% or under 85% of the budget; each open issue about measuring conversions.
 6. **Direction in words.** Every change says better, worse or flat for this goal, not only a signed
    percentage: cost and cost per result are better when lower; results, revenue, return on ad spend,
@@ -168,7 +181,8 @@ are "after", not "because", and nothing is sent.
 - The summary's lines use only what the sections found: its trend is the counted run.
 - Not in the draft: how a tool decides (such as an on-track band), capitals from tool results ("ON
   TRACK"), and these words: tool, read, separate read, live read, cohort, diagnosis, scan, priority
-  score, highest-priority checks, entries, result label, window of data, payload.
+  score, highest-priority checks, entries (say "items", "keywords", "audiences"), result label, record,
+  window of data, payload.
 - A tracking issue is one about measuring conversions (conversion actions, tags, goals, counting);
   anything else is not a tracking issue.
 - No link between a change and an issue or a result unless a tool made it; never "sits alongside".
@@ -192,7 +206,7 @@ are "after", not "because", and nothing is sent.
 
 ## Budget
 
-7 calls; up to 9 with conversion value, a saved budget or an experiment; 10 or 11 for the internal version.
+9 calls; up to 11 with conversion value, a saved budget or an experiment; 12 or 13 for the internal version.
 
 ## Tools
 
