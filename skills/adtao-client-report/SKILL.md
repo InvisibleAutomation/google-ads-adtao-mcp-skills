@@ -1,6 +1,6 @@
 ---
 name: adtao-client-report
-description: Use when the user wants the monthly report or commentary for a client's Google Ads account. Drafts a client update from AdTAO's existing reads - results against the goal, spend against budget, the trend and last year, campaigns, similar accounts, what was done, issues and next month - with a marked place for the account manager's own notes. Nothing is sent. Requires the AdTAO MCP server.
+description: Use when the user wants a client update for a Google Ads account - the monthly report, a weekly update or a daily digest. Drafts it from AdTAO's existing reads - results against the goal, spend against budget, the trend and last year, campaigns, similar accounts, what was done, issues and what is next - with marked places for the account manager's own notes. Nothing is sent. Requires the AdTAO MCP server.
 ---
 
 # Client report
@@ -19,8 +19,24 @@ are "after", not "because", and nothing is sent.
    none were given, the first line of your answer (before the draft) says: "No account notes were
    provided; tell me this quarter's plan and next month's, or edit the marked places." In the draft
    itself, never mention notes that do not exist ("no goal was given in your account notes").
-2. **Month.** The month the user names, else the last complete month. Use the account's own currency
-   (`customer.currency_code` from read 3) for every money figure, with its symbol.
+2. **Period.** A monthly report unless the user asks for a weekly update or a daily digest (Sir Rob,
+   22 Oct 2026: one skill, three rhythms). The period is the one the user names, else the last complete
+   month, Monday-to-Sunday week, or day. Everything below is written for the month; for a week or a day,
+   swap in this table and keep every rule:
+
+   | | Week | Day |
+   |---|---|---|
+   | Compared with | the week before, and the same week last year | the same weekday a week before |
+   | Read 2 | `gaql_search` `SELECT segments.week, metrics.cost_micros, metrics.conversions, metrics.conversions_value, metrics.clicks, metrics.impressions FROM customer WHERE segments.date BETWEEN` the Monday 53 weeks back and the week's Sunday (read 4 is then not needed) | `gaql_search` `SELECT segments.date, …` the same fields `FROM customer WHERE segments.date BETWEEN` 7 days before the day and the day |
+   | Trend | weeks running | none |
+   | Budget | the month's budget × 7 ÷ days in the month; the line reads "Spent {spend} of {budget} ({share}%), this week's share of the budget." with no working shown | `metrics_budget_pacing` with `date_range` THIS_MONTH_TO_DATE; the line reads "So far this month: {spend} of {budget} ({share}%), {on track \| ahead \| behind}." and nothing else |
+   | Compared with similar accounts | as for the month | left out |
+   | Changes (read 7) | the week | the day |
+   | Title | `{Account name}: week of {Monday's date}` | `{Account name}: {date}` |
+   | Last section | "Next week" | none |
+
+   A weekly or daily row counts only when it covers every day of the period. Use the account's own
+   currency (`customer.currency_code` from read 3) for every money figure, with its symbol.
 3. **Read** (9 calls, 2 more only when needed; on the free plan wait any `retry_after` you are given):
    1. `get_account_intelligence`: the goals saved in AdTAO (`platform_state.goals`: metric, target, and
       whether it is for the account or one campaign) and the budgets saved in AdTAO.
@@ -45,7 +61,10 @@ are "after", not "because", and nothing is sent.
    9. `get_experiment_readout` only when read 7 or the notes mention an experiment in the month.
    Add `get_market_comparison` only if the user asks how the account's issues compare with similar
    accounts, and `get_change_provenance_benchmark` only for the internal version (step 7).
-4. **Choose the figures by the goal** (the goal saved in AdTAO; else the notes' `goal.kind`):
+4. **Choose the figures by the goal** (the goal saved in AdTAO; else the notes' `goal.kind`). The
+   account goal always comes first (Sir Rob, 22 Oct 2026): it sets the headline figures and the summary's
+   verdict. Campaign goals come after it, as secondary lines. Only when no account goal is saved does the
+   first campaign goal lead.
 
    | Goal | Headline figures | Supporting |
    |---|---|---|
@@ -60,13 +79,15 @@ are "after", not "because", and nothing is sent.
    ("£33.36 of sales for every £1"), never as "33.36x"; revenue is conversion value. A campaign goal is
    measured on that campaign's own row from read 3, naming the campaign, never on the account's figures;
    if the campaign had no spend that month, say the goal could not be measured this month.
-5. **Write the draft** by filling in this template. Keep its headings and line shapes; write nothing
+5. **Write the draft** by filling in this template. Before it, nothing but the no-notes line (step 1)
+   when no notes were given. Keep its headings and line shapes; write nothing
    the template does not ask for: no extra paragraphs, notes, marked places or "before you send" lists.
    After it come only the house rules' three closing lines (Next step, Based on, Not known). They agree
    with the draft: no issue, figure or source the draft does not show, no check that was not run, no
    reason of your own. Next step is exactly: "Edit the marked places, then send it yourself." Not known
    lists only figures a read returned as unavailable and what the notes lacked, in one short line
-   each: never how a tool returned its results, never general Google Ads knowledge. Sources in plain words ("your account's monthly figures", "AdTAO's latest check
+   each: never how a tool returned its results, where a goal came from, a figure that is blank because
+   its count is zero, or general Google Ads knowledge. Sources in plain words ("your account's monthly figures", "AdTAO's latest check
    of the account"). `{…}` is filled from the reads; `[…]` lines stay
    for the user exactly as written. Results ("leads") stand for `result_label`.
 
@@ -82,6 +103,7 @@ are "after", not "because", and nothing is sent.
 
    ## Against your goal
    {Goal in the client's words, if the notes have them.} Target {target}; this month {figure}: {on | off} target.
+   Campaign goals: {campaign}: target {target}; this month {figure}: {on | off} target.   (one line each, after the account goal)
 
    ## Spend and budget
    Spent {spend} of {budget} ({share}%). Budget: {your agreed budget | the budget saved in AdTAO |
@@ -144,7 +166,8 @@ are "after", not "because", and nothing is sent.
      "and {n} more budget and campaign changes", n being their `total_count`s less the lines shown. Then
      budget changes no change history records, one line each (at most 6, then "and {n} more"). Last line:
      "And {N} changes to keywords, targeting, ads and assets." where N is (c)'s `total_count` less (a)'s
-     and (b)'s; leave the line out when N is 0. Nothing else in this section.
+     and (b)'s; leave the line out when N is 0. Nothing from (c) is listed, only counted. With no changes
+     at all, the section is the strategy line alone. Nothing else in this section.
    - **Issues.** Only issues `archetype_diagnosis` lists in full (with a description); the ones it gives
      only as counts are left out and not mentioned. At most five, by priority, and only those the latest
      check still saw (leave out any it marks as not seen in the latest check). Each is the issue's description and, when the tool gives
@@ -152,7 +175,8 @@ are "after", not "because", and nothing is sent.
      With none, the line is "No open issues in AdTAO's latest check of the account." A tracking red flag is only an issue about measuring conversions.
    - **Counts** everywhere, red flags and experiments included, follow the rounding rule below ("about
      30 leads"). Return on ad spend is in money form in every column ("£33.36 for every £1").
-   - **Red flags** come only from the sections above (a tracking red flag repeats an issue listed above,
+   - **Red flags** are only the five kinds below, never a tool's caution (a caution such as "under 30
+     clicks" may be quoted beside its figure, not as a flag), and come only from the sections above (a tracking red flag repeats an issue listed above,
      with its count when the issue gives one): off goal; results down more than 15% on last month; cost per result worse by more
      than 15%; spend over 105% or under 85% of the budget; each open issue about measuring conversions.
 6. **Direction in words.** Every change says better, worse or flat for this goal, not only a signed
