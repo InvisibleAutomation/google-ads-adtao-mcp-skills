@@ -60,6 +60,16 @@
         }
       }
     },
+    "reporting": {
+      "type": "object",
+      "description": "For the client report: what results are called, this quarter's plan and next month's.",
+      "properties": {
+        "result_label": {"enum": ["leads", "sales", "calls", "bookings", "conversions"]},
+        "strategy": {"type": "string", "description": "This quarter's plan, in the account manager's words."},
+        "planned_updates": {"type": "array", "items": {"type": "string"}},
+        "audience": {"enum": ["owner", "marketing_lead"]}
+      }
+    },
     "updated": {"type": "string", "format": "date"}
   }
 }
