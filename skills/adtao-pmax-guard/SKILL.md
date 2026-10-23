@@ -1,6 +1,6 @@
 ---
 name: adtao-pmax-guard
-description: Use when the user asks what Google's automation is doing in their account: AI Max for Search, Performance Max placements, or ad text and assets Google made itself. Shows what Google changed or created, what it cost, and stages the switches or exclusions the user picks. Requires the AdTAO MCP server.
+description: Use when the user asks what Google's automation is doing in their account: AI Max for Search, Performance Max placements, or ad text and assets Google made itself. Shows what Google changed or created, what it cost, and stages the switches the user picks; site exclusions are listed for the user to add in Google Ads. Requires the AdTAO MCP server.
 ---
 
 # PMax guard
@@ -29,7 +29,9 @@ cost, and gives the user the switches back.
    - Before switching AI Max off for good, offer `stage_ai_max_experiment` to measure it first.
    - Google-made text: `set_campaign_asset_automation` to stop new ones; `set_google_made_asset_status`
      with the link names to pause ones already serving.
-   - Websites: the exclusion list from the placement risk read.
+   - Websites: AdTAO cannot set up site exclusions for approval yet. List the sites to exclude from the
+     placement risk read and say they are added in Google Ads (the campaign's or the account's
+     placement exclusions).
    - A new asset group, when the user wants one: `create_asset_group` with its text, the ids of images
      already in the account (add one first with `add_image_asset`) and optional search themes. It is
      created paused; `enable_asset_group` turns it on as a separate change.
