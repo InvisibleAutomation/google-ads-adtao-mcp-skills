@@ -11,13 +11,18 @@ in `account-context.yaml` (schema: `schemas/account-context.schema.json`).
 ## Steps
 
 1. **Account.** Confirm the account (`list_accessible_accounts` if not named).
-2. **What AdTAO already knows.** Call `get_account_intelligence` and
+2. **Where setup stands.** Call `setup_status` for the account. If AdTAO does not work on it yet, say
+   so and ask; on a yes, `choose_accounts` (`get_account_activation` lists the other accounts under
+   the same manager). If its industry is a guess or missing, ask what the business does, then
+   `get_account_industry` with their words and `set_account_industry` once they confirm; do this
+   before any comparison with other accounts.
+3. **What AdTAO already knows.** Call `get_account_intelligence` and
    `get_conversion_action_inventory` for the account. Pre-fill what they show (currency, the
    conversion actions that count, budgets) and say where each figure came from. If the current
    Google Ads bidding target (target cost per action or ROAS) is shown, compare it with the user's
    goal; if it is not, say only that it was not read (do not infer "none set"). Copy the account's
    name exactly as AdTAO shows it; if no tool showed a name, write that it was not read.
-3. **Ask, in one message, only what is still missing** (always ask; never mark something as declined
+4. **Ask, in one message, only what is still missing** (always ask; never mark something as declined
    unless the user said so):
    - what a lead or sale is worth (or the margin), so break-even cost per lead or ROAS follows,
    - the goal: a target cost per lead, a target ROAS, or a monthly volume at a budget,
@@ -27,13 +32,13 @@ in `account-context.yaml` (schema: `schemas/account-context.schema.json`).
      written when the user says there are none,
    - who approves changes, and the email addresses of the agency's people and the client's people
      (ask for them; leave the list empty only if the user declines).
-4. **Echo it back** as the YAML you are about to write and ask for a yes. Do not save on silence.
-5. **Save the goal in AdTAO** (the set_account_goal tool) (metric and value, the account or one
+5. **Echo it back** as the YAML you are about to write and ask for a yes. Do not save on silence.
+6. **Save the goal in AdTAO** (the set_account_goal tool) (metric and value, the account or one
    campaign), so AdTAO's checks, pacing and reports judge the account against it. This changes
    nothing in Google Ads.
-6. **Write** `account-context.yaml` in the working folder, the mirror of what was saved. One file
+7. **Write** `account-context.yaml` in the working folder, the mirror of what was saved. One file
    per account: `account-context.<customer_id>.yaml` when several accounts share a folder.
-7. **Hand back** to the request that triggered setup, if any.
+8. **Hand back** to the request that triggered setup, if any.
 
 ## Rules
 

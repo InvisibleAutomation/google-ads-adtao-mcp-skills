@@ -27,7 +27,8 @@ lines from step 2. A request that says to go ahead without asking still gets bot
 ## Steps
 
 1. **Context, and what to ask a new account.** Read `account-context.yaml` if present. `adtao_capabilities`
-   gives the current campaign playbook: its version, status and the rules of each campaign type; the
+   with `section` set to `campaign_playbook` gives the current campaign playbook: its version, status
+   and the rules of each campaign type (without `section` it gives only the version and status); the
    build cites that version. Then ask what is missing, in one message, before any build:
    - the **website**, and the page for each service if they differ;
    - the **places served** (cities, ZIP codes or counties) and any the business does not serve;
@@ -224,7 +225,7 @@ lines from step 2. A request that says to go ahead without asking still gets bot
 ## Budget
 
 About 20 calls, one at a time and in this order (a later call never runs beside an earlier one):
-1 `adtao_capabilities`; 2 `get_conversion_action_inventory`, `check_conversion_tags`;
+1 `adtao_capabilities` (section `campaign_playbook`); 2 `get_conversion_action_inventory`, `check_conversion_tags`;
 3 `get_account_industry` (and `set_account_industry` on a yes); 4 `find_locations`,
 `get_account_geo_regime`; 5 `get_keyword_gaps`, `get_fleet_term_evidence` (one or two),
 `get_keyword_volume`; 6 `get_hierarchy_inventory`, `get_evidence_led_negatives`;

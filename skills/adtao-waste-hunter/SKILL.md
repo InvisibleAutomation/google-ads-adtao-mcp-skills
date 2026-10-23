@@ -1,6 +1,6 @@
 ---
 name: adtao-waste-hunter
-description: Use when the user wants to find and stop wasted Google Ads spend in search terms and placements. Judges each term and site against evidence from many advertisers, not just this account, and stages the negatives for the user's approval; site exclusions are listed for the user to add in Google Ads. Requires the AdTAO MCP server.
+description: Use when the user wants to find and stop wasted Google Ads spend in search terms and placements. Judges each term and site against evidence from many advertisers, not just this account, and stages the negatives or exclusions for the user's approval. Requires the AdTAO MCP server.
 ---
 
 # Waste hunter
@@ -39,8 +39,8 @@ from a dead one; AdTAO's cross-account evidence can.
    after negatives were added elsewhere; name the ledger and show `all_changes`.
 8. **Stage** what the user picks: one `stage_manager_action` with `add_negative_keyword` and
    `{negatives: [{term, match_type}], shared_list_name}`. Then follow house rules §6 for the code.
-   Sites cannot be set up for approval yet: list the ones to exclude and say they are added in Google
-   Ads (the campaign's or the account's placement exclusions).
+   Sites and apps the user picks: `stage_manager_action` with `exclude_placement` and `{website}` or
+   `{app_id}`, one each, account level unless the user names a campaign.
 
 ## Rules
 
