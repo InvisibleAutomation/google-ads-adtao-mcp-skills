@@ -26,7 +26,14 @@ lines from step 2. A request that says to go ahead without asking still gets bot
 
 ## Steps
 
-1. **Context, and what to ask a new account.** Read `account-context.yaml` if present. `adtao_capabilities`
+0. **The plan comes first.** Read the account's campaign plan with `get_campaign_plan`. When there is
+   one, build only the lines whose action is build (the client accepted, added or changed them), in the
+   plan's order, each with its budget and the figures the plan already holds. A service the client
+   skipped is not built, even when asked: say when and why they chose not to run it and offer to look
+   at it again in a strategy session. A line still awaiting the client's decision is not built until
+   they decide. With no plan, build what the user asked for.
+1. **Context, and what to ask a new account.** Read the client's notes with `get_notes` (and
+   `account-context.yaml` if present); save each new answer with `add_note`. `adtao_capabilities`
    with `section` set to `campaign_playbook` gives the current campaign playbook: its version, status
    and the rules of each campaign type (without `section` it gives only the version and status); the
    build cites that version. Then ask what is missing, in one message, before any build:
@@ -195,6 +202,9 @@ lines from step 2. A request that says to go ahead without asking still gets bot
     read. Then offer `enable_campaign` as a separate change; its approval page shows what the campaign
     will spend a day and a month, with the account's other running campaigns. Then an image
     for the ads with `add_image_asset` (field type AD_IMAGE) if the user has one.
+14. **Back to the plan.** When the build came from a plan line and approval says it applied, call
+    `link_plan_campaigns` with the plan's id, the service line and the new campaign ids, so the plan
+    can report what the line did at 30, 60 and 90 days against its figures.
 
 ## Rules
 
@@ -225,14 +235,14 @@ lines from step 2. A request that says to go ahead without asking still gets bot
 ## Budget
 
 About 20 calls, one at a time and in this order (a later call never runs beside an earlier one):
-1 `adtao_capabilities` (section `campaign_playbook`); 2 `get_conversion_action_inventory`, `check_conversion_tags`;
+0 `get_campaign_plan`; 1 `adtao_capabilities` (section `campaign_playbook`); 2 `get_conversion_action_inventory`, `check_conversion_tags`;
 3 `get_account_industry` (and `set_account_industry` on a yes); 4 `find_locations`,
 `get_account_geo_regime`; 5 `get_keyword_gaps`, `get_fleet_term_evidence` (one or two),
 `get_keyword_volume`; 6 `get_hierarchy_inventory`, `get_evidence_led_negatives`;
 7 `get_competitor_landscape`, `get_competitor_element_patterns`, `get_site_facts`;
 8 `check_landing_page`; 9 `metrics_budget_pacing`, `get_keyword_volume` on the business's name (the brand campaign); 12 `stage_campaign_build` and the approval; 13 `archetype_detect`,
-`get_ai_max_status`. When the request already answers a step 1 question, use the answer and say
-so; list the ones still open in one message.
+`get_ai_max_status`; 14 `link_plan_campaigns`. When the request already answers a step 1 question,
+use the answer and say so; list the ones still open in one message.
 
 ## Tools
 
@@ -242,4 +252,4 @@ so; list the ones still open in one message.
 `refresh_competitor_data`, `get_keyword_volume`, `find_locations`, `get_account_industry`,
 `set_account_industry`, `check_landing_page`, `get_site_facts`, `adtao_capabilities`, `metrics_budget_pacing`,
 `stage_campaign_build`, `stage_manager_action`,
-`approve_and_execute`, `archetype_detect`, `get_ai_max_status`.
+`approve_and_execute`, `archetype_detect`, `get_ai_max_status`, `get_campaign_plan`, `link_plan_campaigns`.

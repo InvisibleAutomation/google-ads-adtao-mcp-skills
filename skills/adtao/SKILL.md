@@ -22,6 +22,7 @@ AdTAO. Then answer what they asked.
 | Save goals, margins, who approves (first time, or when goals change) | `adtao-setup` |
 | Find wasted spend: search terms, placements, held negatives | `adtao-waste-hunter` |
 | Know whether the conversion numbers are real; set up tracking | `adtao-tracking-truth` |
+| Plan which services to advertise, in what order and with what budget split | `adtao-strategy` |
 | Build a new Search campaign | `adtao-launch` |
 | Who the competitors are, what changed among them, angles to test | `adtao-competitors` |
 | The monthly client report or commentary | `adtao-client-report` |
@@ -33,8 +34,8 @@ AdTAO. Then answer what they asked.
 | "What's wrong with this account?" | `archetype_diagnosis` (stored), or `archetype_detect` with `mode: "async"` for a fresh scan |
 | A named AdTAO tool | Call it directly, inside the house rules |
 
-If an `account-context.yaml` exists in the working folder, read it first and use its goals and
-roles. If it does not, and the request depends on goals (targets, budgets, "is this good"), offer
+Read the client's notes first (`get_notes`; and `account-context.yaml` if one is in the working
+folder) and use their goals and roles. If it does not, and the request depends on goals (targets, budgets, "is this good"), offer
 `adtao-setup` before answering.
 
 ## "Is this normal for an account like mine?"

@@ -54,7 +54,7 @@ to a change type's figure: a change that moved like every change tells the user 
 | check_conversion_tags | "a check of your landing pages" |
 | predict_change | "what happened after the same change on other accounts" |
 | get_market_comparison, get_performance_vs_benchmark | "accounts like yours" |
-| account-context.yaml | "your account notes" |
+| get_notes, account-context.yaml | "your account notes" |
 | CPA / ROAS / CTR | "cost per lead (or per sale)" / "return on ad spend" / "click rate" |
 | any other tool name | what it checked, in a few words |
 
@@ -108,7 +108,7 @@ gives.
 
 End every answer with three short labelled lines: **Next step**, **Based on** (the sources, in plain
 words, with their windows) and **Not known** (what no tool showed). Keep the user's own words for
-their goals (from `account-context.yaml` when it exists).
+their goals (from the client's notes, `get_notes`, or `account-context.yaml`).
 
 Do not claim more than a tool returned: no "universal" from a dozen accounts, no promise of what a
 later step will show, no verdict a tool did not give. General Google Ads knowledge that no tool

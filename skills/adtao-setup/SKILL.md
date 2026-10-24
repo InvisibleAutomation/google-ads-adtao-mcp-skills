@@ -1,17 +1,19 @@
 ---
 name: adtao-setup
-description: Use the first time AdTAO works on an account, or when its goals change. Writes account-context.yaml with the business facts every other AdTAO skill needs (margins, break-even cost per lead or ROAS, goals, area types, brand rules, budget owner, who approves changes). Requires the AdTAO MCP server.
+description: Use the first time AdTAO works on an account, or when its goals change. Saves to the client's AdTAO notes the business facts every other AdTAO skill needs (margins, break-even cost per lead or ROAS, goals, area types, brand rules, budget owner, who approves changes). Requires the AdTAO MCP server.
 ---
 
 # AdTAO setup
 
 The skills judge an account against its own economics. This skill collects them once and keeps them
-in `account-context.yaml` (schema: `schemas/account-context.schema.json`).
+in the client's notes on AdTAO (`get_notes`, `add_note`), which every AI app and the team see; a
+`account-context.yaml` (schema: `schemas/account-context.schema.json`) can mirror them in a working folder.
 
 ## Steps
 
 1. **Account.** Confirm the account (`list_accessible_accounts` if not named).
-2. **Where setup stands.** Call `setup_status` for the account. If AdTAO does not work on it yet, say
+2. **Where setup stands.** Call `get_notes` and `setup_status` for the account; do not ask again for a
+   fact the notes already hold (say which note it came from). If AdTAO does not work on it yet, say
    so and ask; on a yes, `choose_accounts` (`get_account_activation` lists the other accounts under
    the same manager). If its industry is a guess or missing, ask what the business does, then
    `get_account_industry` with their words and `set_account_industry` once they confirm; do this
@@ -36,8 +38,13 @@ in `account-context.yaml` (schema: `schemas/account-context.schema.json`).
 6. **Save the goal in AdTAO** (the set_account_goal tool) (metric and value, the account or one
    campaign), so AdTAO's checks, pacing and reports judge the account against it. This changes
    nothing in Google Ads.
-7. **Write** `account-context.yaml` in the working folder, the mirror of what was saved. One file
-   per account: `account-context.<customer_id>.yaml` when several accounts share a folder.
+7. **Save each fact** with `add_note` (kind fact, with key and value: job_value, profit_per_job or
+   margin, close_rate, break_even_cost_per_lead, target_cost_per_lead or target_roas, monthly_budget,
+   budget_owner, approver, areas_served, areas_not_served, brand_words_never, competitors_never_named),
+   source owner or account_manager and who said it; brand rules and other answers in their words as
+   kind preference or constraint. A new value replaces the old one, which stays on record. Where there
+   is a working folder, also write `account-context.yaml` as a mirror (one per account:
+   `account-context.<customer_id>.yaml` when several accounts share a folder).
 8. **Hand back** to the request that triggered setup, if any.
 
 ## Rules

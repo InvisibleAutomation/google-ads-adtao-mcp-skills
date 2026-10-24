@@ -12,7 +12,8 @@ are "after", not "because", and nothing is sent.
 
 ## Steps
 
-1. **Account notes.** If an `account-context.yaml` is in the working folder or was given to you, read it:
+1. **Account notes.** Read the client's notes with `get_notes`; if an `account-context.yaml` is in the
+   working folder or was given to you, read it too:
    `goal` (with `in_users_words`), `budget.monthly`, `people` (whose email addresses are the agency's and
    whose the client's), and `reporting`: `result_label` (leads, sales, calls, bookings), `strategy`,
    `planned_updates`, `audience`. In the draft they are "your account notes", never the file name. If

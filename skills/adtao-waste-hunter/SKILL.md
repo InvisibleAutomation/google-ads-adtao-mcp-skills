@@ -11,8 +11,8 @@ from a dead one; AdTAO's cross-account evidence can.
 
 ## Steps
 
-1. **Context.** Read `account-context.yaml` if present (break-even cost per lead, brand rules). Say
-   whether it was found; without it, say brand protection uses the account's own brand terms only.
+1. **Context.** Read the client's notes with `get_notes` (and `account-context.yaml` if present):
+   break-even cost per lead, brand rules. Say whether they were found; without it, say brand protection uses the account's own brand terms only.
 2. **Search terms.** Call `get_evidence_led_negatives` for the account. Each term's own 90-day
    wasted spend and its cross-account verdict are in the themed groups and the top-by-waste table;
    the proposed batch lists only the terms. Use each term's own figures; a term with no figure of
